@@ -1,34 +1,69 @@
-console.log('The tweet every 20sec bot is starting')
+console.log('The tweet images every 30min bot is starting')
 
 const Twit = require('twit');
-const config = require('./config');
+const path = require('path');
+const config = require(path.join(__dirname, '/config'));
+const fs = require('fs');
 
 let T = new Twit(config)
 
 
-setInterval(tweetIt, 1000*20) //every 20 secons
-tweetIt();
-
-function tweetIt(txt) {
-
-    const r = Math.floor(Math.random()*100);
-    const thistweet = {
-        status: 'Wassup number ' + r + ' TweetCollage is awesome :)'
-    }
-
-    const tweet = {
-        status: txt
-    }
-
-    T.post('statuses/update', thistweet, tweeted);
 
 
-    function tweeted(err, data, response) {
-        if (err) {
-            console.log ("Some shit went wrong :(");
-        } else {
-            console.log("It worked ;) ")
-        }
-        
-    };
+function random_from_array(images) {
+    return images[Math.floor(Math.random() * images.length)];
 }
+
+function upload_random_image(images) {
+    console.log('Opening an image..');
+    let image_path = path.join(__dirname, '/images/' + random_from_array(images)),
+        b64content = fs.readFileSync(image_path, { encoding: 'base64' });
+
+    console.log('uploading an image..');
+
+    T.post('media/upload', { media_data: b64content }, function (err, data, response) {
+        if (err){
+          console.log('ERROR:');
+          console.log(err);
+        }
+        else{
+          console.log('Image uploaded!');
+          console.log('Now tweeting it...');
+    
+          T.post('statuses/update', {
+            status: random_from_array([
+                'Hey check out this cool TweetCollage pic!',
+                'Super Cool!',
+                'If TweetCollage isnt the coolest app I dont know what is'
+            ]),
+            media_ids: new Array(data.media_id_string)
+          },
+            function(err, data, response) {
+              if (err){
+                console.log('ERROR:');
+                console.log(err);
+              }
+              else{
+                console.log('Posted an image!');
+              }
+            }
+          );
+        }
+      });
+    }
+
+    fs.readdir(__dirname + '/images', function(err, files) {
+        if (err){
+          console.log(err);
+        }
+        else{
+          var images = [];
+          files.forEach(function(f) {
+            images.push(f);
+          });
+      
+          setInterval(function(){
+            upload_random_image(images);
+          }, 1000*60*30);
+        }
+      });
