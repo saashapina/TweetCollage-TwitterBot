@@ -34,13 +34,13 @@ function tweetIt(txt) {
         status: txt
     }
     
-    
+
     T.post('statuses/update', tweet, tweeted);
 
 
     function tweeted(err, data, response) {
         if (err) {
-            console.log ("Some shit went wrong :(");
+            console.log ("Something went wrong :(");
         } else {
             console.log("It worked ;) ")
         }
