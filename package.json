@@ -4,7 +4,7 @@
   "description": "My twitter Bot for TweetCollage",
   "main": "bot.js",
   "scripts": {
-    "start":"node bot.js",
+    "start":"node bot3.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
