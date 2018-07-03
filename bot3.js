@@ -19,10 +19,11 @@ function tweetEvent(eventMsg) {
     let text = eventMsg.text;
     let from = eventMsg.user.screen_name;
 
-    console.log('to ' + replyto + ' ' + 'from ' + from);
+    console.log('from ' + from + ' ' + 'to ' + replyto);
 
     if (replyto === 'TweetCollageApp') {
-        let newtweet = 'Wasssup! @' + from + ' Make your tweet collage at TweetCollage.com!'
+        const r = Math.floor(Math.random()*1000)
+        let newtweet = 'Wasssup! @' + from + ' Make your tweet collage at TweetCollage.com, Today you are ' + r + 'x Awesome!' 
         tweetIt(newtweet);
     }
 }
